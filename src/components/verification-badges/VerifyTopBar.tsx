@@ -21,11 +21,10 @@ export function VerifyTopBar({ registrationNumber, verifyUrl }: VerifyTopBarProp
 
   return (
     <div 
-      className="fixed top-0 left-0 w-full bg-gradient-to-r from-white via-green-50 to-white shadow-lg relative"
+      className="fixed top-0 left-0 w-full bg-gradient-to-r from-white via-green-50 to-white shadow-lg z-50"
       style={{
         height: '40px',
         animation: 'fadeOut 0.5s ease-out 20s forwards',
-        zIndex: 1000,
         transition: 'all 0.3s ease'
       }}
     >
@@ -37,11 +36,11 @@ export function VerifyTopBar({ registrationNumber, verifyUrl }: VerifyTopBarProp
         <X className="h-4 w-4" />
       </button>
 
-      <div className="max-w-4xl mx-auto h-full flex items-center justify-center">
+      <div className="max-w-4xl mx-auto h-full flex items-center justify-center px-4">
         <div className="flex items-center space-x-2 animate-slide-in-left">
           <Check className="h-4 w-4 text-green-600 opacity-0 animate-appear" />
 
-          <span className="text-xs font-medium text-gray-700 opacity-0 animate-appear flex items-center">
+          <span className="text-xs font-medium text-gray-700 opacity-0 animate-appear flex items-center flex-wrap">
             Verified Official Store by{' '}
             <a 
               href="https://verify.link" 
