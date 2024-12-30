@@ -7,8 +7,8 @@ export const Hero = () => {
       <div className="animate-float mb-8 inline-block">
         <Shield className="h-20 w-20 text-primary mx-auto" />
       </div>
-      <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-        Build Trust in Your E-commerce
+      <h1 className="text-6xl font-bold mb-6 text-primary">
+        Trust Badge Solution for Online Stores
       </h1>
       <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
         Verify your online store, protect your customers, and grow your business with our trusted verification platform.

@@ -61,7 +61,7 @@ export function StoreVerificationDialog({
   const getBadgeCode = (registrationNumber: string, type: "topbar" | "footer") => {
     const verifyUrl = generateVerifyUrl(registrationNumber);
     
-    const code = `<!-- Verify.link ${type === "topbar" ? "Top Bar" : "Footer"} Badge -->
+    const code = `<!-- Veryfy ${type === "topbar" ? "Top Bar" : "Footer"} Badge -->
 <script>
   (function() {
     // Create container element
@@ -71,7 +71,7 @@ export function StoreVerificationDialog({
     
     // Load Verify.link badge script
     const script = document.createElement('script');
-    script.src = 'https://verify.link/badge/${type}.js';
+    script.src = 'https://veryfy.link/badge/${type}.js';
     script.async = true;
     script.defer = true;
     script.setAttribute('data-registration', '${registrationNumber}');

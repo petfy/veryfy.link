@@ -43,12 +43,12 @@ export function VerifyTopBar({ registrationNumber, verifyUrl }: VerifyTopBarProp
           <span className="text-xs font-medium text-gray-700 opacity-0 animate-appear flex items-center flex-wrap">
             Verified Official Store by{' '}
             <a 
-              href="https://verify.link" 
+              href="https://veryfy.link" 
               target="_blank" 
               rel="noopener noreferrer" 
               className="text-green-600 hover:text-green-800 transition-colors duration-300 mx-1"
             >
-              Verify.link
+              Veryfy
             </a>
             <span className="text-gray-500 flex items-center">
               Shop with confidence{' '}

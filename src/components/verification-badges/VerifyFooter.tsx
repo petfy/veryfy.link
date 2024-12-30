@@ -13,12 +13,12 @@ export function VerifyFooter({ registrationNumber, verifyUrl }: VerifyFooterProp
         <span className="text-xs font-medium text-gray-700 flex items-center">
           Verified by{' '}
           <a 
-            href="https://verify.link" 
+            href="https://veryfy.link" 
             target="_blank" 
             rel="noopener noreferrer" 
             className="text-green-600 hover:text-green-800 transition-colors duration-300 mx-1"
           >
-            Verify.link
+            Veryfy
           </a>
           <span className="text-gray-500 flex items-center">
             <ShoppingBag className="h-4 w-4 mx-1 text-blue-600" />
