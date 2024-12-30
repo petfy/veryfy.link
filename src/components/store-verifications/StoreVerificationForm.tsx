@@ -14,6 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useQueryClient } from "@tanstack/react-query";
+import { ImagePlus } from "lucide-react";
 
 interface VerificationFormData {
   storeName: string;
@@ -22,13 +23,27 @@ interface VerificationFormData {
   businessType: string;
   contactEmail: string;
   description: string;
+  logo?: File;
 }
 
 export function StoreVerificationForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const { toast } = useToast();
   const form = useForm<VerificationFormData>();
   const queryClient = useQueryClient();
+
+  const handleLogoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setLogoPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+      form.setValue("logo", file);
+    }
+  };
 
   const onSubmit = async (data: VerificationFormData) => {
     setIsSubmitting(true);
@@ -41,6 +56,24 @@ export function StoreVerificationForm() {
         throw new Error("No authenticated user found");
       }
 
+      let logoUrl = null;
+      if (data.logo) {
+        const fileExt = data.logo.name.split('.').pop();
+        const filePath = `${crypto.randomUUID()}.${fileExt}`;
+        
+        const { error: uploadError } = await supabase.storage
+          .from('store-logos')
+          .upload(filePath, data.logo);
+
+        if (uploadError) throw uploadError;
+
+        const { data: { publicUrl } } = supabase.storage
+          .from('store-logos')
+          .getPublicUrl(filePath);
+
+        logoUrl = publicUrl;
+      }
+
       // Create store entry
       const { data: store, error: storeError } = await supabase
         .from("stores")
@@ -49,6 +82,7 @@ export function StoreVerificationForm() {
           url: data.storeUrl,
           user_id: user.id,
           verification_status: "pending",
+          logo_url: logoUrl,
         })
         .select()
         .single();
@@ -75,6 +109,7 @@ export function StoreVerificationForm() {
       });
 
       form.reset();
+      setLogoPreview(null);
     } catch (error) {
       console.error("Verification request error:", error);
       toast({
@@ -90,6 +125,29 @@ export function StoreVerificationForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <div className="space-y-4">
+          <FormLabel>Store Logo</FormLabel>
+          <div className="flex items-center gap-4">
+            <div className="relative h-24 w-24 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden">
+              {logoPreview ? (
+                <img src={logoPreview} alt="Logo preview" className="h-full w-full object-cover" />
+              ) : (
+                <ImagePlus className="h-8 w-8 text-gray-400" />
+              )}
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleLogoChange}
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              />
+            </div>
+            <div className="text-sm text-muted-foreground">
+              <p>Upload your store logo</p>
+              <p>Recommended size: 512x512px</p>
+            </div>
+          </div>
+        </div>
+
         <FormField
           control={form.control}
           name="storeName"
