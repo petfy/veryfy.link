@@ -9,6 +9,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Check, X } from "lucide-react";
 import { Store, Document } from "./types";
+import { useEffect, useState } from "react";
+import { generateVerifyUrl } from "@/lib/verification";
+import { supabase } from "@/integrations/supabase/client";
 
 interface StoreVerificationDialogProps {
   store: Store | null;
@@ -25,14 +28,40 @@ export function StoreVerificationDialog({
   onOpenChange,
   onVerificationAction,
 }: StoreVerificationDialogProps) {
-  const getStatusBadge = (status: string) => {
-    const variants: Record<string, "default" | "secondary" | "destructive"> = {
-      pending: "default",
-      verified: "secondary",
-      rejected: "destructive",
-    };
+  const [badges, setBadges] = useState<any[]>([]);
 
-    return <Badge variant={variants[status]}>{status}</Badge>;
+  const fetchBadges = async (storeId: string) => {
+    const { data, error } = await supabase
+      .from("verification_badges")
+      .select("*")
+      .eq("store_id", storeId);
+
+    if (!error && data) {
+      setBadges(data);
+    }
+  };
+
+  useEffect(() => {
+    if (store?.id && store.verification_status === "verified") {
+      fetchBadges(store.id);
+    }
+  }, [store]);
+
+  const getBadgeCode = (registrationNumber: string, type: "topbar" | "footer") => {
+    const verifyUrl = generateVerifyUrl(registrationNumber);
+    const componentName = type === "topbar" ? "VerifyTopBar" : "VerifyFooter";
+    
+    return `
+import { ${componentName} } from '@verify-link/badges';
+
+export default function VerificationBadge() {
+  return (
+    <${componentName}
+      registrationNumber="${registrationNumber}"
+      verifyUrl="${verifyUrl}"
+    />
+  );
+}`;
   };
 
   return (
@@ -125,6 +154,24 @@ export function StoreVerificationDialog({
                     <Check className="w-4 h-4 mr-1" />
                     Approve
                   </Button>
+                </div>
+              )}
+
+              {store.verification_status === "verified" && badges.length > 0 && (
+                <div>
+                  <h3 className="text-lg font-semibold mb-2">Verification Badges</h3>
+                  <div className="space-y-4">
+                    {badges.map((badge) => (
+                      <div key={badge.id} className="p-4 border rounded-lg space-y-2">
+                        <p className="font-medium capitalize">
+                          {badge.badge_type} Badge - Registration: {badge.registration_number}
+                        </p>
+                        <pre className="bg-gray-100 p-4 rounded-md overflow-x-auto">
+                          <code>{getBadgeCode(badge.registration_number, badge.badge_type)}</code>
+                        </pre>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>

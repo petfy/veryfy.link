@@ -1,0 +1,32 @@
+@keyframes fadeOut {
+  from { opacity: 1; height: 40px; }
+  to { 
+    opacity: 0; 
+    height: 0;
+    display: none;
+  }
+}
+
+@keyframes slideInLeft {
+  from { 
+    transform: translateX(-20px);
+    opacity: 0;
+  }
+  to { 
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes appear {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.5s ease-out forwards;
+}
+
+.animate-appear {
+  animation: appear 0.5s ease-out 0.3s forwards;
+}
