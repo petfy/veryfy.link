@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Check, X } from "lucide-react";
+import { Check, X, ShoppingBag } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { StoreProfileModal } from "./StoreProfileModal";
 import type { Store } from "../store-verifications/types";
@@ -77,6 +77,7 @@ export function VerifyTopBar({ registrationNumber, verifyUrl, isPreview = false 
                 Veryfy
               </a>
               <span className="text-gray-500 flex items-center">
+                <ShoppingBag className="h-4 w-4 mx-1 text-blue-600" />
                 <button
                   onClick={() => setIsModalOpen(true)}
                   className="text-blue-600 hover:text-blue-800 transition-colors ml-1"

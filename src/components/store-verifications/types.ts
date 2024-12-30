@@ -5,6 +5,7 @@ export interface Store {
   verification_status: string;
   created_at: string;
   user_id: string;
+  logo_url?: string;
 }
 
 export interface Document {
