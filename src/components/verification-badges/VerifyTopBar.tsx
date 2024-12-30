@@ -11,8 +11,19 @@ interface VerifyTopBarProps {
 }
 
 export function VerifyTopBar({ registrationNumber, verifyUrl, isPreview = false }: VerifyTopBarProps) {
+  const [isVisible, setIsVisible] = useState(true);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [store, setStore] = useState<Store | null>(null);
+
+  useEffect(() => {
+    if (!isPreview) {
+      const timer = setTimeout(() => {
+        setIsVisible(false);
+      }, 20000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isPreview]);
 
   const fetchStoreProfile = async () => {
     try {
@@ -58,20 +69,44 @@ export function VerifyTopBar({ registrationNumber, verifyUrl, isPreview = false 
     setIsProfileOpen(!isProfileOpen);
   };
 
+  if (!isVisible) return null;
+
   return (
     <div className="relative">
       <div 
         className="w-full bg-gradient-to-r from-white via-green-50 to-white shadow-lg"
         style={{
           height: '40px',
-          transition: 'all 0.3s ease'
+          transition: 'all 0.3s ease',
+          animation: !isPreview ? 'fadeOut 0.5s ease-out 20s forwards' : undefined
         }}
       >
+        <button 
+          onClick={() => setIsVisible(false)}
+          className="absolute right-2 top-2 text-gray-500 hover:text-gray-700 transition-colors z-10"
+          aria-label="Close"
+        >
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            className="h-4 w-4" 
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke="currentColor"
+          >
+            <path 
+              strokeLinecap="round" 
+              strokeLinejoin="round" 
+              strokeWidth={2} 
+              d="M6 18L18 6M6 6l12 12" 
+            />
+          </svg>
+        </button>
+
         <div className="max-w-4xl mx-auto h-full flex items-center justify-center px-4">
           <div className="flex items-center space-x-2 animate-slide-in-left">
             <Check className="h-4 w-4 text-green-600 opacity-0 animate-appear" />
             <span className="text-xs font-medium text-gray-700 opacity-0 animate-appear flex items-center flex-wrap">
-              Verified Official Store by{' '}
+              <span className="whitespace-nowrap">Verified Official Store by{' '}</span>
               <a 
                 href="https://veryfy.link" 
                 target="_blank" 
