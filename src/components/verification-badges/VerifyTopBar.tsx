@@ -10,6 +10,17 @@ interface VerifyTopBarProps {
   isPreview?: boolean;
 }
 
+const demoStore: Store = {
+  id: "demo-id",
+  user_id: "demo-user",
+  name: "Demo Store",
+  url: "https://demo-store.com",
+  verification_status: "verified",
+  created_at: "2024-01-01T00:00:00.000Z",
+  updated_at: "2024-01-01T00:00:00.000Z",
+  logo_url: null
+};
+
 export function VerifyTopBar({ registrationNumber, verifyUrl, isPreview = false }: VerifyTopBarProps) {
   const [isVisible, setIsVisible] = useState(true);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -32,6 +43,12 @@ export function VerifyTopBar({ registrationNumber, verifyUrl, isPreview = false 
     try {
       console.log("Fetching store profile for registration:", registrationNumber);
       
+      if (isPreview) {
+        console.log("Using demo store data");
+        setStore(demoStore);
+        return;
+      }
+
       const { data: badge, error: badgeError } = await supabase
         .from("verification_badges")
         .select("store_id")
@@ -69,9 +86,7 @@ export function VerifyTopBar({ registrationNumber, verifyUrl, isPreview = false 
   };
 
   useEffect(() => {
-    if (!isPreview) {
-      fetchStoreProfile();
-    }
+    fetchStoreProfile();
   }, [isPreview, registrationNumber]);
 
   const handleCheckStore = () => {
@@ -144,6 +159,7 @@ export function VerifyTopBar({ registrationNumber, verifyUrl, isPreview = false 
         store={store}
         isOpen={isProfileOpen}
         onOpenChange={setIsProfileOpen}
+        isPreview={isPreview}
       />
     </div>
   );

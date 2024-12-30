@@ -7,15 +7,30 @@ interface StoreProfileModalProps {
   store: Store | null;
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
+  isPreview?: boolean;
 }
 
-export function StoreProfileModal({ store, isOpen, onOpenChange }: StoreProfileModalProps) {
+const demoStore: Store = {
+  id: "demo-id",
+  user_id: "demo-user",
+  name: "Demo Store",
+  url: "https://demo-store.com",
+  verification_status: "verified",
+  created_at: "2024-01-01T00:00:00.000Z",
+  updated_at: "2024-01-01T00:00:00.000Z",
+  logo_url: null
+};
+
+export function StoreProfileModal({ store, isOpen, onOpenChange, isPreview = false }: StoreProfileModalProps) {
   console.log("StoreProfileModal rendered with:", {
     store,
     isOpen,
+    isPreview
   });
 
-  if (!store) {
+  const displayStore = isPreview ? demoStore : store;
+
+  if (!displayStore) {
     console.log("No store data available");
     return null;
   }
@@ -51,23 +66,23 @@ export function StoreProfileModal({ store, isOpen, onOpenChange }: StoreProfileM
 
           <div className="flex items-center gap-4">
             <Avatar className="h-20 w-20">
-              {store.logo_url ? (
-                <img src={store.logo_url} alt={store.name} className="object-cover" />
+              {displayStore.logo_url ? (
+                <img src={displayStore.logo_url} alt={displayStore.name} className="object-cover" />
               ) : (
                 <div className="h-full w-full bg-muted flex items-center justify-center text-2xl font-semibold">
-                  {store.name[0]}
+                  {displayStore.name[0]}
                 </div>
               )}
             </Avatar>
             <div>
-              <h3 className="font-semibold text-lg">{store.name}</h3>
+              <h3 className="font-semibold text-lg">{displayStore.name}</h3>
               <a 
-                href={store.url} 
+                href={displayStore.url} 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-sm text-muted-foreground hover:text-primary"
               >
-                {store.url}
+                {displayStore.url}
               </a>
             </div>
           </div>
@@ -80,10 +95,10 @@ export function StoreProfileModal({ store, isOpen, onOpenChange }: StoreProfileM
                   Verified Store
                 </Badge>
                 <p className="text-sm text-muted-foreground">
-                  Status: {store.verification_status}
+                  Status: {displayStore.verification_status}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  Verified since: {new Date(store.created_at).toLocaleDateString()}
+                  Verified since: {new Date(displayStore.created_at).toLocaleDateString()}
                 </p>
               </div>
             </div>
