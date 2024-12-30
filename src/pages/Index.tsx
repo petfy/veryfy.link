@@ -69,6 +69,7 @@ const Index = () => {
       <VerifyFooter
         registrationNumber={demoRegistrationNumber}
         verifyUrl={demoVerifyUrl}
+        isPreview={true}
       />
     </div>
   );
