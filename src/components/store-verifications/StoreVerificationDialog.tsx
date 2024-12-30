@@ -12,6 +12,8 @@ import { Store, Document } from "./types";
 import { useEffect, useState } from "react";
 import { generateVerifyUrl } from "@/lib/verification";
 import { supabase } from "@/integrations/supabase/client";
+import { VerifyTopBar } from "../verification-badges";
+import { VerifyFooter } from "../verification-badges";
 
 interface StoreVerificationDialogProps {
   store: Store | null;
@@ -66,19 +68,27 @@ export function StoreVerificationDialog({
 
   const getBadgeCode = (registrationNumber: string, type: "topbar" | "footer") => {
     const verifyUrl = generateVerifyUrl(registrationNumber);
-    const componentName = type === "topbar" ? "VerifyTopBar" : "VerifyFooter";
     
-    return `
-import { ${componentName} } from '@verify-link/badges';
+    const code = `<!-- Verify.link ${type === "topbar" ? "Top Bar" : "Footer"} Badge -->
+<script>
+  (function() {
+    // Create container element
+    const container = document.createElement('div');
+    container.id = 'verify-link-${type}';
+    ${type === "topbar" ? "document.body.insertBefore(container, document.body.firstChild);" : "document.body.appendChild(container);"}
+    
+    // Load Verify.link badge script
+    const script = document.createElement('script');
+    script.src = 'https://verify.link/badge/${type}.js';
+    script.async = true;
+    script.defer = true;
+    script.setAttribute('data-registration', '${registrationNumber}');
+    script.setAttribute('data-verify-url', '${verifyUrl}');
+    document.head.appendChild(script);
+  })();
+</script>`;
 
-export default function VerificationBadge() {
-  return (
-    <${componentName}
-      registrationNumber="${registrationNumber}"
-      verifyUrl="${verifyUrl}"
-    />
-  );
-}`;
+    return code;
   };
 
   return (
@@ -156,18 +166,12 @@ export default function VerificationBadge() {
                 <div className="flex justify-end gap-2 pt-4">
                   <Button
                     variant="destructive"
-                    onClick={() =>
-                      onVerificationAction(store.id, "rejected")
-                    }
+                    onClick={() => onVerificationAction(store.id, "rejected")}
                   >
                     <X className="w-4 h-4 mr-1" />
                     Reject
                   </Button>
-                  <Button
-                    onClick={() =>
-                      onVerificationAction(store.id, "verified")
-                    }
-                  >
+                  <Button onClick={() => onVerificationAction(store.id, "verified")}>
                     <Check className="w-4 h-4 mr-1" />
                     Approve
                   </Button>
@@ -177,15 +181,33 @@ export default function VerificationBadge() {
               {store.verification_status === "verified" && badges.length > 0 && (
                 <div>
                   <h3 className="text-lg font-semibold mb-2">Verification Badges</h3>
-                  <div className="space-y-4">
+                  <div className="space-y-6">
                     {badges.map((badge) => (
-                      <div key={badge.id} className="p-4 border rounded-lg space-y-2">
-                        <p className="font-medium capitalize">
-                          {badge.badge_type} Badge - Registration: {badge.registration_number}
-                        </p>
-                        <pre className="bg-gray-100 p-4 rounded-md overflow-x-auto">
-                          <code>{getBadgeCode(badge.registration_number, badge.badge_type)}</code>
-                        </pre>
+                      <div key={badge.id} className="space-y-4">
+                        <div className="p-4 border rounded-lg space-y-2">
+                          <p className="font-medium capitalize mb-2">
+                            {badge.badge_type} Badge - Registration: {badge.registration_number}
+                          </p>
+                          <div className="bg-gray-100 p-4 rounded-md">
+                            <pre className="overflow-x-auto whitespace-pre-wrap text-sm">
+                              <code>{getBadgeCode(badge.registration_number, badge.badge_type)}</code>
+                            </pre>
+                          </div>
+                        </div>
+                        <div className="border rounded-lg p-4 bg-white">
+                          <p className="text-sm text-gray-500 mb-2">Preview:</p>
+                          {badge.badge_type === "topbar" ? (
+                            <VerifyTopBar
+                              registrationNumber={badge.registration_number}
+                              verifyUrl={generateVerifyUrl(badge.registration_number)}
+                            />
+                          ) : (
+                            <VerifyFooter
+                              registrationNumber={badge.registration_number}
+                              verifyUrl={generateVerifyUrl(badge.registration_number)}
+                            />
+                          )}
+                        </div>
                       </div>
                     ))}
                   </div>
