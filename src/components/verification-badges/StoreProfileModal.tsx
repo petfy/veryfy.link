@@ -10,7 +10,15 @@ interface StoreProfileModalProps {
 }
 
 export function StoreProfileModal({ store, isOpen, onOpenChange }: StoreProfileModalProps) {
-  if (!store) return null;
+  console.log("StoreProfileModal rendered with:", {
+    store,
+    isOpen,
+  });
+
+  if (!store) {
+    console.log("No store data available");
+    return null;
+  }
 
   return (
     <Collapsible

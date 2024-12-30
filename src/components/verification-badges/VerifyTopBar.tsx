@@ -16,6 +16,9 @@ export function VerifyTopBar({ registrationNumber, verifyUrl, isPreview = false 
   const [store, setStore] = useState<Store | null>(null);
 
   useEffect(() => {
+    console.log("VerifyTopBar mounted with registration:", registrationNumber);
+    console.log("Current profile open state:", isProfileOpen);
+    
     if (!isPreview) {
       const timer = setTimeout(() => {
         setIsVisible(false);
@@ -27,6 +30,8 @@ export function VerifyTopBar({ registrationNumber, verifyUrl, isPreview = false 
 
   const fetchStoreProfile = async () => {
     try {
+      console.log("Fetching store profile for registration:", registrationNumber);
+      
       const { data: badge, error: badgeError } = await supabase
         .from("verification_badges")
         .select("store_id")
@@ -37,6 +42,8 @@ export function VerifyTopBar({ registrationNumber, verifyUrl, isPreview = false 
         console.error("Error fetching badge:", badgeError);
         return;
       }
+
+      console.log("Badge data:", badge);
 
       if (badge?.store_id) {
         const { data: storeData, error: storeError } = await supabase
@@ -49,6 +56,8 @@ export function VerifyTopBar({ registrationNumber, verifyUrl, isPreview = false 
           console.error("Error fetching store:", storeError);
           return;
         }
+
+        console.log("Store data:", storeData);
 
         if (storeData) {
           setStore(storeData);
@@ -66,7 +75,9 @@ export function VerifyTopBar({ registrationNumber, verifyUrl, isPreview = false 
   }, [isPreview, registrationNumber]);
 
   const handleCheckStore = () => {
+    console.log("Check store clicked, current state:", isProfileOpen);
     setIsProfileOpen(!isProfileOpen);
+    console.log("New state will be:", !isProfileOpen);
   };
 
   if (!isVisible) return null;
