@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { Shield } from "lucide-react"; // Correct import for the Shield icon
 
 export const Navbar = () => {
   return (
