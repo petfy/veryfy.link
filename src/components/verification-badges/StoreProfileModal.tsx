@@ -1,11 +1,7 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { useState } from "react";
 import type { Store } from "../store-verifications/types";
 
 interface StoreProfileModalProps {
@@ -18,12 +14,13 @@ export function StoreProfileModal({ store, isOpen, onOpenChange }: StoreProfileM
   if (!store) return null;
 
   return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Verified Store Profile</DialogTitle>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
+    <Collapsible
+      open={isOpen}
+      onOpenChange={onOpenChange}
+      className="w-full transition-all duration-300 ease-in-out"
+    >
+      <CollapsibleContent className="bg-white border-t border-b shadow-lg py-6 px-4 space-y-4 data-[state=open]:animate-accordion-down data-[state=closed]:animate-accordion-up">
+        <div className="max-w-4xl mx-auto">
           <div className="flex items-center gap-4">
             <Avatar className="h-20 w-20">
               {store.logo_url ? (
@@ -46,7 +43,7 @@ export function StoreProfileModal({ store, isOpen, onOpenChange }: StoreProfileM
               </a>
             </div>
           </div>
-          <div className="space-y-2">
+          <div className="mt-4 space-y-2">
             <Badge variant="secondary" className="mb-2">
               Verified Store
             </Badge>
@@ -55,7 +52,7 @@ export function StoreProfileModal({ store, isOpen, onOpenChange }: StoreProfileM
             </p>
           </div>
         </div>
-      </DialogContent>
-    </Dialog>
+      </CollapsibleContent>
+    </Collapsible>
   );
 }

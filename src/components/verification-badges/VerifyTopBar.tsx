@@ -12,7 +12,7 @@ interface VerifyTopBarProps {
 
 export function VerifyTopBar({ registrationNumber, verifyUrl, isPreview = false }: VerifyTopBarProps) {
   const [isVisible, setIsVisible] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [store, setStore] = useState<Store | null>(null);
 
   const fetchStoreProfile = async () => {
@@ -44,7 +44,7 @@ export function VerifyTopBar({ registrationNumber, verifyUrl, isPreview = false 
   if (!isVisible) return null;
 
   return (
-    <>
+    <div className="relative">
       <div 
         className="w-full bg-gradient-to-r from-white via-green-50 to-white shadow-lg"
         style={{
@@ -65,7 +65,6 @@ export function VerifyTopBar({ registrationNumber, verifyUrl, isPreview = false 
         <div className="max-w-4xl mx-auto h-full flex items-center justify-center px-4">
           <div className="flex items-center space-x-2 animate-slide-in-left">
             <Check className="h-4 w-4 text-green-600 opacity-0 animate-appear" />
-
             <span className="text-xs font-medium text-gray-700 opacity-0 animate-appear flex items-center flex-wrap">
               Verified Official Store by{' '}
               <a 
@@ -79,7 +78,7 @@ export function VerifyTopBar({ registrationNumber, verifyUrl, isPreview = false 
               <span className="text-gray-500 flex items-center">
                 <ShoppingBag className="h-4 w-4 mx-1 text-blue-600" />
                 <button
-                  onClick={() => setIsModalOpen(true)}
+                  onClick={() => setIsProfileOpen(!isProfileOpen)}
                   className="text-blue-600 hover:text-blue-800 transition-colors ml-1"
                 >
                   Check Store
@@ -92,9 +91,9 @@ export function VerifyTopBar({ registrationNumber, verifyUrl, isPreview = false 
 
       <StoreProfileModal
         store={store}
-        isOpen={isModalOpen}
-        onOpenChange={setIsModalOpen}
+        isOpen={isProfileOpen}
+        onOpenChange={setIsProfileOpen}
       />
-    </>
+    </div>
   );
 }
