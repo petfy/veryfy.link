@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface VerificationFormData {
   storeName: string;
@@ -27,6 +28,7 @@ export function StoreVerificationForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const form = useForm<VerificationFormData>();
+  const queryClient = useQueryClient();
 
   const onSubmit = async (data: VerificationFormData) => {
     setIsSubmitting(true);
@@ -46,6 +48,7 @@ export function StoreVerificationForm() {
           name: data.storeName,
           url: data.storeUrl,
           user_id: user.id,
+          verification_status: "pending",
         })
         .select()
         .single();
@@ -63,6 +66,9 @@ export function StoreVerificationForm() {
 
       if (profileError) throw profileError;
 
+      // Refresh the stores list in the table
+      queryClient.invalidateQueries({ queryKey: ["stores"] });
+
       toast({
         title: "Verification request submitted",
         description: "We'll review your request and get back to you soon.",
@@ -70,6 +76,7 @@ export function StoreVerificationForm() {
 
       form.reset();
     } catch (error) {
+      console.error("Verification request error:", error);
       toast({
         variant: "destructive",
         title: "Error",
