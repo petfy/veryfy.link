@@ -8,6 +8,7 @@ interface StoreProfileModalProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   isPreview?: boolean;
+  position?: "top" | "bottom";
 }
 
 const demoStore: Store = {
@@ -21,7 +22,13 @@ const demoStore: Store = {
   logo_url: null
 };
 
-export function StoreProfileModal({ store, isOpen, onOpenChange, isPreview = false }: StoreProfileModalProps) {
+export function StoreProfileModal({ 
+  store, 
+  isOpen, 
+  onOpenChange, 
+  isPreview = false,
+  position = "top" 
+}: StoreProfileModalProps) {
   console.log("StoreProfileModal rendered with:", {
     store,
     isOpen,
@@ -35,13 +42,17 @@ export function StoreProfileModal({ store, isOpen, onOpenChange, isPreview = fal
     return null;
   }
 
+  const modalClasses = position === "bottom" 
+    ? "bottom-full mb-2" 
+    : "top-full mt-2";
+
   return (
     <Collapsible
       open={isOpen}
       onOpenChange={onOpenChange}
       className="w-full transition-all duration-500 ease-in-out"
     >
-      <CollapsibleContent className="bg-white border-t border-b shadow-lg py-6 px-4 space-y-4 data-[state=open]:animate-accordion-down data-[state=closed]:animate-accordion-up">
+      <CollapsibleContent className={`absolute ${modalClasses} left-0 right-0 bg-white border shadow-lg py-6 px-4 space-y-4 data-[state=open]:animate-accordion-down data-[state=closed]:animate-accordion-up`}>
         <div className="max-w-4xl mx-auto">
           <button 
             onClick={() => onOpenChange(false)}

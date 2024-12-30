@@ -1,54 +1,101 @@
+import { useState, useEffect } from "react";
 import { Check, ShoppingBag } from "lucide-react";
-import { useState } from "react";
-import { StoreProfileModal } from "./StoreProfileModal";
 import { supabase } from "@/integrations/supabase/client";
+import { StoreProfileModal } from "./StoreProfileModal";
 import type { Store } from "../store-verifications/types";
 
 interface VerifyFooterProps {
   registrationNumber: string;
   verifyUrl: string;
+  isPreview?: boolean;
 }
 
-export function VerifyFooter({ registrationNumber, verifyUrl }: VerifyFooterProps) {
+const demoStore: Store = {
+  id: "demo-id",
+  user_id: "demo-user",
+  name: "Demo Store",
+  url: "https://demo-store.com",
+  verification_status: "verified",
+  created_at: "2024-01-01T00:00:00.000Z",
+  updated_at: "2024-01-01T00:00:00.000Z",
+  logo_url: null
+};
+
+export function VerifyFooter({ registrationNumber, verifyUrl, isPreview = false }: VerifyFooterProps) {
+  const [isVisible, setIsVisible] = useState(true);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [store, setStore] = useState<Store | null>(null);
 
-  const handleCheckStore = async () => {
-    if (!store) {
-      try {
-        const { data: badge, error: badgeError } = await supabase
-          .from("verification_badges")
-          .select("store_id")
-          .eq("registration_number", registrationNumber)
+  useEffect(() => {
+    console.log("VerifyFooter mounted with registration:", registrationNumber);
+    console.log("Current profile open state:", isProfileOpen);
+    
+    if (!isPreview) {
+      const timer = setTimeout(() => {
+        setIsVisible(false);
+      }, 20000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isPreview]);
+
+  const fetchStoreProfile = async () => {
+    try {
+      console.log("Fetching store profile for registration:", registrationNumber);
+      
+      if (isPreview) {
+        console.log("Using demo store data");
+        setStore(demoStore);
+        return;
+      }
+
+      const { data: badge, error: badgeError } = await supabase
+        .from("verification_badges")
+        .select("store_id")
+        .eq("registration_number", registrationNumber)
+        .maybeSingle();
+
+      if (badgeError) {
+        console.error("Error fetching badge:", badgeError);
+        return;
+      }
+
+      console.log("Badge data:", badge);
+
+      if (badge?.store_id) {
+        const { data: storeData, error: storeError } = await supabase
+          .from("stores")
+          .select("*")
+          .eq("id", badge.store_id)
           .maybeSingle();
 
-        if (badgeError) {
-          console.error("Error fetching badge:", badgeError);
+        if (storeError) {
+          console.error("Error fetching store:", storeError);
           return;
         }
 
-        if (badge?.store_id) {
-          const { data: storeData, error: storeError } = await supabase
-            .from("stores")
-            .select("*")
-            .eq("id", badge.store_id)
-            .maybeSingle();
+        console.log("Store data:", storeData);
 
-          if (storeError) {
-            console.error("Error fetching store:", storeError);
-            return;
-          }
-
-          if (storeData) {
-            setStore(storeData);
-          }
+        if (storeData) {
+          setStore(storeData);
         }
-      } catch (error) {
-        console.error("Error in handleCheckStore:", error);
       }
+    } catch (error) {
+      console.error("Error in fetchStoreProfile:", error);
     }
-    setIsProfileOpen(!isProfileOpen);
   };
+
+  useEffect(() => {
+    fetchStoreProfile();
+  }, [isPreview, registrationNumber]);
+
+  const handleCheckStore = () => {
+    console.log("Check store clicked, current state:", isProfileOpen);
+    setIsProfileOpen(!isProfileOpen);
+    console.log("New state will be:", !isProfileOpen);
+  };
+
+  if (!isVisible) return null;
 
   return (
     <div className="relative">
@@ -82,6 +129,8 @@ export function VerifyFooter({ registrationNumber, verifyUrl }: VerifyFooterProp
         store={store}
         isOpen={isProfileOpen}
         onOpenChange={setIsProfileOpen}
+        isPreview={isPreview}
+        position="bottom"
       />
     </div>
   );
