@@ -1,8 +1,14 @@
 import { Hero } from "@/components/Hero";
 import { Navbar } from "@/components/Navbar";
 import { PricingCard } from "@/components/PricingCard";
+import { VerifyTopBar } from "@/components/verification-badges";
+import { VerifyFooter } from "@/components/verification-badges";
+import { generateVerifyUrl } from "@/lib/verification";
 
 const Index = () => {
+  const demoRegistrationNumber = "VF-2024-DEMO";
+  const demoVerifyUrl = generateVerifyUrl(demoRegistrationNumber);
+
   const plans = [
     {
       title: "Basic",
@@ -41,6 +47,11 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
+      <VerifyTopBar 
+        registrationNumber={demoRegistrationNumber}
+        verifyUrl={demoVerifyUrl}
+        isPreview={true}
+      />
       <Navbar />
       <Hero />
       
@@ -54,6 +65,11 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      <VerifyFooter
+        registrationNumber={demoRegistrationNumber}
+        verifyUrl={demoVerifyUrl}
+      />
     </div>
   );
 };

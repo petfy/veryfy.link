@@ -126,6 +126,7 @@ export function StoreVerificationDialog({
                               <VerifyTopBar
                                 registrationNumber={badge.registration_number}
                                 verifyUrl={generateVerifyUrl(badge.registration_number)}
+                                isPreview={true}
                               />
                             </div>
                           ) : (
