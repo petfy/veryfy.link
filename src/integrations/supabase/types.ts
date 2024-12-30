@@ -9,7 +9,128 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          business_name: string | null
+          business_type: string | null
+          created_at: string
+          full_name: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          business_name?: string | null
+          business_type?: string | null
+          created_at?: string
+          full_name?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          business_name?: string | null
+          business_type?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      scam_reports: {
+        Row: {
+          created_at: string
+          description: string
+          evidence_url: string | null
+          id: string
+          reported_email: string
+          reporter_id: string
+          status: string | null
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          evidence_url?: string | null
+          id?: string
+          reported_email: string
+          reporter_id: string
+          status?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          evidence_url?: string | null
+          id?: string
+          reported_email?: string
+          reporter_id?: string
+          status?: string | null
+        }
+        Relationships: []
+      }
+      stores: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          updated_at: string
+          url: string
+          user_id: string
+          verification_status: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          updated_at?: string
+          url: string
+          user_id: string
+          verification_status?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          updated_at?: string
+          url?: string
+          user_id?: string
+          verification_status?: string | null
+        }
+        Relationships: []
+      }
+      verification_documents: {
+        Row: {
+          created_at: string
+          document_type: string
+          document_url: string
+          id: string
+          status: string | null
+          store_id: string
+        }
+        Insert: {
+          created_at?: string
+          document_type: string
+          document_url: string
+          id?: string
+          status?: string | null
+          store_id: string
+        }
+        Update: {
+          created_at?: string
+          document_type?: string
+          document_url?: string
+          id?: string
+          status?: string | null
+          store_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "verification_documents_store_id_fkey"
+            columns: ["store_id"]
+            isOneToOne: false
+            referencedRelation: "stores"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
