@@ -23,18 +23,13 @@ export function VerifyFooter({ registrationNumber, verifyUrl }: VerifyFooterProp
           <span className="text-gray-500 flex items-center">
             <ShoppingBag className="h-4 w-4 mx-1 text-blue-600" />
           </span>
-          {' | '}
-          <span className="text-gray-700 font-bold mx-1">
-            Registration: {registrationNumber}
-          </span>
-          {' '}
           <a 
             href={verifyUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="text-blue-600 hover:text-blue-800 text-xs"
           >
-            Verify
+            Check Store
           </a>
         </span>
       </div>

@@ -85,10 +85,6 @@ export function VerifyTopBar({ registrationNumber, verifyUrl, isPreview = false 
                   Check Store
                 </button>
               </span>
-              {' | '}
-              <span className="text-gray-700 font-bold mx-1">
-                Registration: {registrationNumber}
-              </span>
             </span>
           </div>
         </div>
