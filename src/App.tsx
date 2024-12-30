@@ -7,6 +7,8 @@ import Index from "./pages/Index";
 import Login from "./pages/Login";
 import AdminLayout from "./components/AdminLayout";
 import AdminDashboard from "./pages/AdminDashboard";
+import StoreVerifications from "./pages/StoreVerifications";
+import ScamReports from "./pages/ScamReports";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +23,8 @@ const App = () => (
           <Route path="/login" element={<Login />} />
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
+            <Route path="verifications" element={<StoreVerifications />} />
+            <Route path="reports" element={<ScamReports />} />
           </Route>
         </Routes>
       </BrowserRouter>
