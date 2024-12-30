@@ -11,27 +11,40 @@ interface VerifyTopBarProps {
 }
 
 export function VerifyTopBar({ registrationNumber, verifyUrl, isPreview = false }: VerifyTopBarProps) {
-  const [isVisible, setIsVisible] = useState(true);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [store, setStore] = useState<Store | null>(null);
 
   const fetchStoreProfile = async () => {
-    const { data: badges } = await supabase
-      .from("verification_badges")
-      .select("store_id")
-      .eq("registration_number", registrationNumber)
-      .single();
+    try {
+      const { data: badge, error: badgeError } = await supabase
+        .from("verification_badges")
+        .select("store_id")
+        .eq("registration_number", registrationNumber)
+        .maybeSingle();
 
-    if (badges?.store_id) {
-      const { data: storeData } = await supabase
-        .from("stores")
-        .select("*")
-        .eq("id", badges.store_id)
-        .single();
-
-      if (storeData) {
-        setStore(storeData);
+      if (badgeError) {
+        console.error("Error fetching badge:", badgeError);
+        return;
       }
+
+      if (badge?.store_id) {
+        const { data: storeData, error: storeError } = await supabase
+          .from("stores")
+          .select("*")
+          .eq("id", badge.store_id)
+          .maybeSingle();
+
+        if (storeError) {
+          console.error("Error fetching store:", storeError);
+          return;
+        }
+
+        if (storeData) {
+          setStore(storeData);
+        }
+      }
+    } catch (error) {
+      console.error("Error in fetchStoreProfile:", error);
     }
   };
 
