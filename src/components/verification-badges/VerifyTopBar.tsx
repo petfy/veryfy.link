@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Check, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { StoreProfileModal } from "./StoreProfileModal";
-import type { Store } from "./types";
+import type { Store } from "../store-verifications/types";
 
 interface VerifyTopBarProps {
   registrationNumber: string;

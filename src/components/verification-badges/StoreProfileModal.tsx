@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/dialog";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Store } from "./types";
+import { Store } from "../store-verifications/types";
 
 interface StoreProfileModalProps {
   store: Store | null;
