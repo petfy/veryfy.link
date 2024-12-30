@@ -4,6 +4,7 @@ export interface Store {
   url: string;
   verification_status: string;
   created_at: string;
+  updated_at: string;
   user_id: string;
   logo_url?: string;
 }

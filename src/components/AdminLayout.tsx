@@ -2,25 +2,44 @@ import { useEffect, useState } from "react";
 import { useNavigate, Link, Outlet } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { LayoutDashboard, ShieldCheck, AlertOctagon, LogOut } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 export default function AdminLayout() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
 
   useEffect(() => {
+    // Check initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!session) {
+        toast({
+          variant: "destructive",
+          title: "Session expired",
+          description: "Please log in again",
+        });
         navigate("/login");
       }
       setLoading(false);
     });
 
-    supabase.auth.onAuthStateChange((_event, session) => {
+    // Listen for auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
       if (!session) {
+        toast({
+          variant: "destructive",
+          title: "Session expired",
+          description: "Please log in again",
+        });
         navigate("/login");
       }
     });
-  }, [navigate]);
+
+    // Cleanup subscription
+    return () => subscription.unsubscribe();
+  }, [navigate, toast]);
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
