@@ -96,6 +96,44 @@ export type Database = {
         }
         Relationships: []
       }
+      verification_badges: {
+        Row: {
+          badge_type: string
+          created_at: string
+          id: string
+          is_active: boolean | null
+          registration_number: string
+          store_id: string
+          updated_at: string
+        }
+        Insert: {
+          badge_type: string
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          registration_number: string
+          store_id: string
+          updated_at?: string
+        }
+        Update: {
+          badge_type?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          registration_number?: string
+          store_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "verification_badges_store_id_fkey"
+            columns: ["store_id"]
+            isOneToOne: false
+            referencedRelation: "stores"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       verification_documents: {
         Row: {
           created_at: string
@@ -136,7 +174,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      generate_registration_number: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never

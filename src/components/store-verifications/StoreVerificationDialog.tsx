@@ -21,6 +21,16 @@ interface StoreVerificationDialogProps {
   onVerificationAction: (storeId: string, status: "verified" | "rejected") => void;
 }
 
+const getStatusBadge = (status: string) => {
+  const variants: Record<string, "default" | "secondary" | "destructive"> = {
+    pending: "default",
+    verified: "secondary",
+    rejected: "destructive",
+  };
+
+  return <Badge variant={variants[status] || "default"}>{status}</Badge>;
+};
+
 export function StoreVerificationDialog({
   store,
   documents,
@@ -31,13 +41,20 @@ export function StoreVerificationDialog({
   const [badges, setBadges] = useState<any[]>([]);
 
   const fetchBadges = async (storeId: string) => {
-    const { data, error } = await supabase
-      .from("verification_badges")
-      .select("*")
-      .eq("store_id", storeId);
+    const { data: verificationData } = await supabase
+      .from("stores")
+      .select(`
+        verification_badges (
+          id,
+          registration_number,
+          badge_type
+        )
+      `)
+      .eq("id", storeId)
+      .single();
 
-    if (!error && data) {
-      setBadges(data);
+    if (verificationData?.verification_badges) {
+      setBadges(verificationData.verification_badges);
     }
   };
 

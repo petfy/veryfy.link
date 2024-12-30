@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -130,7 +130,7 @@ export default function ScamReports() {
     setReports(data || []);
   };
 
-  useState(() => {
+  useEffect(() => {
     fetchReports();
   }, []);
 
@@ -141,7 +141,7 @@ export default function ScamReports() {
       dismissed: "destructive",
     };
 
-    return <Badge variant={variants[status]}>{status}</Badge>;
+    return <Badge variant={variants[status] || "default"}>{status}</Badge>;
   };
 
   return (
