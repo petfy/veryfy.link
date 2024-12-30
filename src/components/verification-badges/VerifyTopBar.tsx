@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Check, X, ShoppingBag } from "lucide-react";
+import { Check, ShoppingBag } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { StoreProfileModal } from "./StoreProfileModal";
 import type { Store } from "../store-verifications/types";
@@ -41,7 +41,9 @@ export function VerifyTopBar({ registrationNumber, verifyUrl, isPreview = false 
     }
   }, [isPreview, registrationNumber]);
 
-  if (!isVisible) return null;
+  const handleCheckStore = () => {
+    setIsProfileOpen(!isProfileOpen);
+  };
 
   return (
     <div className="relative">
@@ -52,16 +54,6 @@ export function VerifyTopBar({ registrationNumber, verifyUrl, isPreview = false 
           transition: 'all 0.3s ease'
         }}
       >
-        {!isPreview && (
-          <button 
-            onClick={() => setIsVisible(false)}
-            className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors"
-            aria-label="Close"
-          >
-            <X className="h-4 w-4" />
-          </button>
-        )}
-
         <div className="max-w-4xl mx-auto h-full flex items-center justify-center px-4">
           <div className="flex items-center space-x-2 animate-slide-in-left">
             <Check className="h-4 w-4 text-green-600 opacity-0 animate-appear" />
@@ -78,7 +70,7 @@ export function VerifyTopBar({ registrationNumber, verifyUrl, isPreview = false 
               <span className="text-gray-500 flex items-center">
                 <ShoppingBag className="h-4 w-4 mx-1 text-blue-600" />
                 <button
-                  onClick={() => setIsProfileOpen(!isProfileOpen)}
+                  onClick={handleCheckStore}
                   className="text-blue-600 hover:text-blue-800 transition-colors ml-1"
                 >
                   Check Store
