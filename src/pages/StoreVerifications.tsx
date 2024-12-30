@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { StoreVerificationsTable } from "@/components/store-verifications/StoreVerificationsTable";
 import { StoreVerificationDialog } from "@/components/store-verifications/StoreVerificationDialog";
+import { StoreVerificationForm } from "@/components/store-verifications/StoreVerificationForm";
 import type { Store, Document } from "@/components/store-verifications/types";
 
 export default function StoreVerifications() {
@@ -98,10 +99,22 @@ export default function StoreVerifications() {
         </Badge>
       </div>
 
-      <StoreVerificationsTable
-        stores={stores}
-        onViewDetails={handleViewDetails}
-      />
+      <div className="grid gap-6 md:grid-cols-2">
+        <div>
+          <h2 className="text-lg font-semibold mb-4">Submit Verification Request</h2>
+          <div className="bg-white p-6 rounded-lg border">
+            <StoreVerificationForm />
+          </div>
+        </div>
+
+        <div>
+          <h2 className="text-lg font-semibold mb-4">Verification Requests</h2>
+          <StoreVerificationsTable
+            stores={stores}
+            onViewDetails={handleViewDetails}
+          />
+        </div>
+      </div>
 
       <StoreVerificationDialog
         store={selectedStore}
