@@ -24,7 +24,7 @@ export function VerifyTopBar({ registrationNumber, verifyUrl, isPreview = false 
 
   return (
     <div 
-      className="fixed top-0 left-0 w-full bg-gradient-to-r from-white via-green-50 to-white shadow-lg z-50"
+      className="w-full bg-gradient-to-r from-white via-green-50 to-white shadow-lg"
       style={{
         height: '40px',
         animation: isPreview ? undefined : 'fadeOut 0.5s ease-out 20s forwards',
