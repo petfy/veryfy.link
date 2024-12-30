@@ -19,9 +19,11 @@ export function BadgeCodeDisplay({ code, preview, title }: BadgeCodeDisplayProps
           </ScrollArea>
         </div>
       </div>
-      <div className="border rounded-lg p-4 bg-white">
-        <p className="text-sm text-gray-500 mb-2">Preview:</p>
-        {preview}
+      <div className="relative border rounded-lg p-4 bg-white min-h-[100px] overflow-visible">
+        <p className="text-sm text-gray-500 mb-4">Preview:</p>
+        <div className="relative w-full">
+          {preview}
+        </div>
       </div>
     </div>
   );
